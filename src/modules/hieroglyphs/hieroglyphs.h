@@ -4,15 +4,14 @@
 #include <Wire.h>
 
 
-class Hieroglyphs {
+class Hieroglyphs : public Game {
 private:
     unsigned int difficulty;
     
     // pins
-    unsigned int display_sda;
-    unsigned int display_scl;
-    unsigned int digital_solution_input_len = 4;
-    unsigned int digital_solution_input[4];
+    unsigned int digital_solution_input[4][4] = {RED_BUTTON, GREEN_BUTTON, BLUE_BUTTON, YELLOW_BUTTON};
+    unsigned int mux_addr[4] = {3, 4, 5, 6};
+    unsigned int digital_solution_input_len = sizeof(digital_solution_input) / sizeof(digital_solution_input[0]);
     unsigned int last_btn_state[4] = {1, 1, 1, 1};
     
     // internal variables
@@ -20,7 +19,6 @@ private:
     unsigned int internal_tick = 100;
     unsigned int internal_counter = 0;
     unsigned int permutation_rounds = 24;
-    
     unsigned int solution_state = 0;
 
 public:
@@ -31,10 +29,9 @@ public:
     unsigned int button_press_time[4] = {0,0,0,0};
 
     Hieroglyphs();
-    Hieroglyphs(unsigned int difficulty,
-               unsigned int digital_solution_input[],
-               unsigned int display_sda = 0,
-               unsigned int display_scl = 0);
+    Hieroglyphs(unsigned int difficulty);
+
     void tick();
     unsigned short int verify();
+    void init();
 };
