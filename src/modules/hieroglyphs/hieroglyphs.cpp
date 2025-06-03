@@ -33,11 +33,11 @@ Hieroglyphs::Hieroglyphs(unsigned int difficulty) {
 void Hieroglyphs::init() {
 
     // set digital pins 
-    unsigned int digital_input_size = 4; //sizeof(this->digital_solution_input) / sizeof(this->digital_solution_input[0]); 
+    unsigned int digital_input_size = sizeof(this->digital_solution_input) / sizeof(this->digital_solution_input[0]); 
     for (unsigned int i=0; i < digital_input_size; i++) {
-        pinMode(this->mux_addr[i], OUTPUT);
+        this->digital_solution_input[i] = digital_solution_input[i];
+        pinMode(digital_solution_input[i], OUTPUT);
     }
-
 
     // calculate button order
     for (unsigned int i=0; i < this->digital_solution_input_len; i++)
@@ -121,16 +121,9 @@ unsigned short int Hieroglyphs::verify() {
 
     // check all 4 buttons
     for (unsigned int i=0; i < digital_solution_input_len; i++) {
-        for (unsigned int j=0; j < 4; j++) {
-            digitalWrite(this->mux_addr[j], digital_solution_input[i][j]);
-        }
-        pinMode(MUX_DATA, INPUT_PULLUP);
 
         // button clicked (+ analog to digital conversion)
-        acc_state = (analogRead(MUX_DATA) > 512);
-        char buf[20];
-        sprintf(buf, "State: %d", acc_state);
-        Serial.write(buf);
+        acc_state = (analogRead(digital_solution_input[i]) > 512);
         if (last_btn_state[i] != acc_state) {
             last_btn_state[i] = acc_state;  // update acc state
             if (acc_state == 0 && button_order[this->solution_state] == i && button_press_time[this->solution_state]== this->acc_pos) {
@@ -138,7 +131,7 @@ unsigned short int Hieroglyphs::verify() {
                 this->solution_state++;
 
                 char buf[20];
-                sprintf(buf, "State: %d\n", this->solution_state);
+                sprintf(buf, "State: %d", this->solution_state);
                 Serial.write(buf);
 
                 Serial.write("Correct value");
