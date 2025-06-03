@@ -9,7 +9,7 @@ private:
     unsigned int difficulty;
     
     // pins
-    unsigned int digital_solution_input[4][4] = {RED_BUTTON, GREEN_BUTTON, BLUE_BUTTON, YELLOW_BUTTON};
+    unsigned int digital_solution_input[4] = {RED_BUTTON, GREEN_BUTTON, BLUE_BUTTON, YELLOW_BUTTON};
     unsigned int mux_addr[4] = {3, 4, 5, 6};
     unsigned int digital_solution_input_len = sizeof(digital_solution_input) / sizeof(digital_solution_input[0]);
     unsigned int last_btn_state[4] = {1, 1, 1, 1};
